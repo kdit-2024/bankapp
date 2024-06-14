@@ -25,3 +25,20 @@ public class Account {
     @ManyToOne
     private User user; // hibernate - orm 기술
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
