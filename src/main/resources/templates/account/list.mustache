@@ -2,28 +2,20 @@
 
 <div class="container">
 
-    <h1 class="mt-3">홍길동님 계좌목록</h1>
-    <div class="card mt-3">
-        <div class="card-body">
-            <h4 class="card-title">112-2031-3333-11</h4>
-            <p class="card-text">220,000</p>
-            <a href="/account/1111" class="card-link">상세보기</a>
+    <h1 class="mt-3">{{model.fullname}}님 계좌목록</h1>
+
+    {{#model.accounts}}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h4 class="card-title">계좌번호 : {{number}}</h4>
+                <p class="card-text">잔액 : {{balance}}</p>
+                <a href="/account/{{number}}" class="card-link">상세보기</a>
+            </div>
         </div>
-    </div>
-    <div class="card mt-3">
-        <div class="card-body">
-            <h4 class="card-title">112-2031-3333-11</h4>
-            <p class="card-text">220,000</p>
-            <a href="/account/1111" class="card-link">상세보기</a>
-        </div>
-    </div>
-    <div class="card mt-3">
-        <div class="card-body">
-            <h4 class="card-title">112-2031-3333-11</h4>
-            <p class="card-text">220,000</p>
-            <a href="/account/1111" class="card-link">상세보기</a>
-        </div>
-    </div>
+    {{/model.accounts}}
+
+
+
 </div>
 
 {{>layout/footer}}
