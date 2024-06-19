@@ -24,10 +24,6 @@ public class Account {
     // fk
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // hibernate - orm 기술
-
-    public void 잔액검증(Integer amount){
-        if(balance < amount) throw new RuntimeException("잔액이 부족해요 : 현재잔액 : "+balance);
-    }
 }
 
 

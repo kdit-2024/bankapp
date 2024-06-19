@@ -18,6 +18,22 @@ public class AccountController {
     private final HttpSession session;
     private final AccountService accountService;
 
+//    @GetMapping("/test/account") // uk or pk
+//    public @ResponseBody AccountResponse.DetailDTO testDetail(){
+//        AccountResponse.DetailDTO resDTO = accountService.계좌상세보기("1111", 1);
+//        return resDTO;
+//    }
+
+    @GetMapping("/account/{number}") // uk or pk
+    public String detail(@PathVariable("number") String number, HttpServletRequest request){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
+
+        AccountResponse.DetailDTO resDTO = accountService.계좌상세보기(number, sessionUser.getId());
+        request.setAttribute("model", resDTO);
+        return "account/detail";
+    }
+
     @PostMapping("/account/transfer")
     public String accountTransfer(AccountRequest.TransferDTO reqDTO){
         User sessionUser = (User) session.getAttribute("sessionUser");
@@ -90,11 +106,5 @@ public class AccountController {
         return "account/transfer-form";
     }
 
-    @GetMapping("/account/{number}") // uk or pk
-    public String detail(@PathVariable("number") Integer number){
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if(sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
 
-        return "account/detail";
-    }
 }
