@@ -2,21 +2,29 @@
 
 <!--계좌 생성시에 1000원이 디폴트로 들어간다-->
 <div class="container">
-    <form action="#">
-        <div class="mb-3 mt-3">
-            <input type="number" class="form-control" placeholder="Enter wNumber" name="wNumber">
-        </div>
-        <div class="mb-3 mt-3">
-            <input type="number" class="form-control" placeholder="Enter dNumber" name="dNumber">
-        </div>
-        <div class="mb-3 mt-3">
-            <input type="number" class="form-control" placeholder="Enter amount" name="amount">
-        </div>
-        <div class="mb-3 mt-3">
-            <input type="password" class="form-control" placeholder="Enter password" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary">이체하기</button>
-    </form>
+    <div class="d-flex">
+        <form action="/account/transfer" method="post">
+            <div class="mb-3 mt-3">
+                <input type="number" class="form-control" placeholder="Enter wNumber" name="wNumber">
+            </div>
+            <div class="mb-3 mt-3">
+                <input type="number" class="form-control" placeholder="Enter dNumber" name="dNumber">
+            </div>
+            <div class="mb-3 mt-3">
+                <input type="number" class="form-control" placeholder="Enter amount" name="amount">
+            </div>
+            <div class="mb-3 mt-3">
+                <input type="password" class="form-control" placeholder="Enter password" name="password">
+            </div>
+            <button type="submit" class="btn btn-primary">이체하기</button>
+        </form>
+        <ul class="list-group mt-3">
+            <li class="list-group-item active">1111 계좌 - 홍길동</li>
+            <li class="list-group-item">2222 계좌 - 임꺽정</li>
+            <li class="list-group-item">3333 계좌 - 장보고</li>
+        </ul>
+    </div>
+
 </div>
 
 {{>layout/footer}}

@@ -13,6 +13,26 @@ import java.util.List;
 @Repository
 public class AccountRepository {
     private final EntityManager em;
+    
+    // TODO: 계좌번호로 계좌조회 필요
+    public Account findByNumber(String number){
+        Query query = em.createQuery("select ac from Account ac where ac.number=:number", Account.class);
+        query.setParameter("number", number);
+
+        Account account = (Account) query.getSingleResult();
+        return account;
+    }
+
+    public Account findByNumberJoinUser(String number){
+        Query query = em.createQuery("select ac from Account ac join fetch ac.user where ac.number=:number", Account.class);
+        query.setParameter("number", number);
+
+        Account account = (Account) query.getSingleResult();
+        return account;
+    }
+    
+    // TODO: 업데이트 메서드 필요
+    
 
     public List<Account> findAllV2(Integer sessionUserId){
 

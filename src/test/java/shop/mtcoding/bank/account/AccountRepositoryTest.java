@@ -16,6 +16,25 @@ public class AccountRepositoryTest {
     private AccountRepository accountRepository;
 
     @Test
+    public void findByNumberJoinUser_test(){
+        // given
+        String number = "1111";
+
+        // when
+        accountRepository.findByNumberJoinUser(number);
+    }
+
+
+    @Test
+    public void findByNumber_test(){
+        // given
+        String number = "1111";
+
+        // when
+        accountRepository.findByNumber(number);
+    }
+
+    @Test
     public void findAllV2_test(){
         System.out.println("테스트 시작====================");
         // given

@@ -22,8 +22,12 @@ public class Account {
     private Integer balance; // 잔액 (21억보다 많을 수 없다)
 
     // fk
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user; // hibernate - orm 기술
+
+    public void 잔액검증(Integer amount){
+        if(balance < amount) throw new RuntimeException("잔액이 부족해요 : 현재잔액 : "+balance);
+    }
 }
 
 

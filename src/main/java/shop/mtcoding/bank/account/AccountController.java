@@ -18,7 +18,20 @@ public class AccountController {
     private final HttpSession session;
     private final AccountService accountService;
 
-    @PostMapping("account/save")
+    @PostMapping("/account/transfer")
+    public String accountTransfer(AccountRequest.TransferDTO reqDTO){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
+
+        // 0원 이하 검증 amount (유효성 검사)
+
+        accountService.계좌이체(reqDTO);
+
+        return "redirect:/account/"+reqDTO.getWNumber();
+    }
+
+
+    @PostMapping("/account/save")
     public String accountSave(AccountRequest.SaveDTO reqDTO){
         User sessionUser = (User) session.getAttribute("sessionUser");
         if (sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다"); // 한 줄은 {} 필요 없음
@@ -30,7 +43,7 @@ public class AccountController {
 
 
     //@RequestMapping(method = RequestMethod.GET, value = "/home")
-    @GetMapping("/account/list")
+    @GetMapping({"/", "/account/list"})
     public String accountList(HttpServletRequest request){
         User sessionUser = (User) session.getAttribute("sessionUser");
         if(sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
@@ -77,8 +90,8 @@ public class AccountController {
         return "account/transfer-form";
     }
 
-    @GetMapping("/account/1111")
-    public String detail(){
+    @GetMapping("/account/{number}") // uk or pk
+    public String detail(@PathVariable("number") Integer number){
         User sessionUser = (User) session.getAttribute("sessionUser");
         if(sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
 

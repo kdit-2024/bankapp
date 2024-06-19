@@ -3,6 +3,8 @@ package shop.mtcoding.bank.account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.bank.history.History;
+import shop.mtcoding.bank.history.HistoryRepository;
 import shop.mtcoding.bank.user.User;
 
 import java.util.List;
@@ -13,6 +15,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final HistoryRepository historyRepository;
+
+    @Transactional
+    public void 계좌이체(AccountRequest.TransferDTO reqDTO){
+        // 1. 출금 계좌 존재 여부
+        Account wAccount = accountRepository.findByNumber(reqDTO.getWNumber());
+        if(wAccount == null) throw new RuntimeException("출금계좌가 없어요");
+        
+        // 2. 입금 계좌 존재 여부
+        Account dAccount = accountRepository.findByNumber(reqDTO.getDNumber());
+        if(dAccount == null) throw new RuntimeException("입금계좌가 없어요");
+        
+        // 3. 출금 계좌 잔액 검증 (DB 조회가 필요) - amount 보다 더 금액이 있는지!!
+        if(wAccount.getBalance() < reqDTO.getAmount()) throw new RuntimeException("잔액이 부족해요 : 현재잔액 : "+wAccount.getBalance()); 
+
+        // 4. 출금 패스워드 검증 - password
+        if(!wAccount.getPassword().equals(reqDTO.getPassword())) throw new RuntimeException("출금계좌의 패스워드가 일치하지 않습니다");
+        
+        // 5. 출금 계좌 업데이트 (객체 상태 변경)
+        wAccount.setBalance(wAccount.getBalance() - reqDTO.getAmount());
+        
+        // 6. 입금 계좌 업데이트 (객체 상태 변경)
+        dAccount.setBalance(dAccount.getBalance() + reqDTO.getAmount());
+        
+        // 7. 히스토리 인서트
+        History history = new History();
+        history.setWithdrawAccount(wAccount);
+        history.setDepositAccount(dAccount);
+        history.setWithdrawBalance(wAccount.getBalance());
+        history.setDepositBalance(dAccount.getBalance());
+        history.setAmount(reqDTO.getAmount());
+
+        historyRepository.save(history);
+    } // 영속화 된 객체의 상태가 변경되면, update가 일어난다. (더티체킹)
+    
     
     public AccountResponse.ListDTO 나의계좌목록(Integer sessionUserId){
         List<Account> accountList = accountRepository.findAll(sessionUserId);
