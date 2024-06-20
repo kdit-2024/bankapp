@@ -82,5 +82,15 @@ public class AccountService {
         // 4. Account객체, List<History> 객체 -> 합쳐서 리턴
         return new AccountResponse.DetailDTO(account, historyList);
     }
+
+    public AccountResponse.DetailDTOV2 계좌상세보기V2(String number, Integer sessionUserId) {
+        Account account = accountRepository.findByNumberJoinHistoryV2(number);
+        if(account == null) throw new RuntimeException("조회할 계좌가 없어요");
+
+        if(!account.getUser().getId().equals(sessionUserId)) throw new RuntimeException("해당 계좌를 조회할 권한이 없어요");
+
+        // 3. Account객체, List<History> 객체 -> 합쳐서 리턴
+        return new AccountResponse.DetailDTOV2(account);
+    }
     
 }

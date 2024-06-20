@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import shop.mtcoding.bank.account.db.DetailDBResponse;
 import shop.mtcoding.bank.user.User;
 
 import java.util.List;
+
 
 @Import(AccountRepository.class)
 @DataJpaTest
@@ -14,6 +17,22 @@ public class AccountRepositoryTest {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Test
+    public void findByNumberJoinHistoryV2_test(){
+        String number = "1111";
+        Account account = accountRepository.findByNumberJoinHistoryV2(number);
+        System.out.println("출금내역 개수 : "+account.getWithdrawHistories().size());
+        System.out.println("입금내역 개수 : "+account.getDepositHistories().size());
+    }
+
+    @Test
+    public void findByNumberJoinHistory_test(){
+        String number = "1111";
+        List<DetailDBResponse> resDTO = accountRepository.findByNumberJoinHistory(number);
+        System.out.println("size : "+resDTO.size());
+        resDTO.forEach(System.out::println);
+    }
 
     @Test
     public void findByNumberJoinUser_test(){

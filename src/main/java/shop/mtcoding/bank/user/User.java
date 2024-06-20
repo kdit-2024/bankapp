@@ -3,6 +3,10 @@ package shop.mtcoding.bank.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import shop.mtcoding.bank.account.Account;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 목적 : 클래스를 통해 테이블을 자동생성
@@ -23,4 +27,5 @@ public class User {
     private String password; // 비밀번호
     private String email; // 이메일
     private String fullname; // 사람이름
+
 }

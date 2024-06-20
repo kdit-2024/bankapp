@@ -3,7 +3,10 @@ package shop.mtcoding.bank.account;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.qlrm.mapper.JpaResultMapper;
+import org.qlrm.mapper.ResultMapper;
 import org.springframework.stereotype.Repository;
+import shop.mtcoding.bank.account.db.DetailDBResponse;
 import shop.mtcoding.bank.user.User;
 
 import java.util.ArrayList;
@@ -13,6 +16,44 @@ import java.util.List;
 @Repository
 public class AccountRepository {
     private final EntityManager em;
+
+    public Account findByNumberJoinHistoryV2(String number){
+        String sql = """
+                select ac from Account ac 
+                join fetch ac.withdrawHistories wh 
+                join fetch ac.depositHistories dh
+                join fetch ac.user u
+                where ac.number = :number
+                """;
+        Query query = em.createQuery(sql, Account.class);
+        query.setParameter("number", number);
+        return (Account) query.getSingleResult();
+    }
+
+    public List<DetailDBResponse> findByNumberJoinHistory(String number){
+        String sql = """
+                select ac.id accountId, ac.number accountNumber, ac.balance accountBalance,
+                ac.password accountPassword, ac.user_id userId, hs.id historyId,
+                hs.withdraw_account_id withdrawAccountId, 
+                hs.deposit_account_id depositAccountId,
+                hs.withdraw_balance withdrawBalance,
+                hs.deposit_balance depositBalance,
+                hs.amount amount,
+                hs.created_at createdAt 
+                from account_tb ac inner join history_tb hs 
+                on ac.id = hs.withdraw_account_id or ac.id = hs.deposit_account_id 
+                where ac.number = ? 
+                order by hs.id 
+                limit 0,3
+                """;
+        Query query = em.createNativeQuery(sql);
+        query.setParameter(1, number);
+
+        JpaResultMapper result = new JpaResultMapper();
+        List<DetailDBResponse> resDTO = result.list(query, DetailDBResponse.class);
+
+        return resDTO;
+    }
     
     // TODO: 계좌번호로 계좌조회 필요
     public Account findByNumber(String number){

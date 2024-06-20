@@ -3,7 +3,13 @@ package shop.mtcoding.bank.account;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import shop.mtcoding.bank.history.History;
 import shop.mtcoding.bank.user.User;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -24,6 +30,13 @@ public class Account {
     // fk
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // hibernate - orm 기술
+
+    // fk 가 아니라, 조회를 위해서 사용!!
+    @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY)
+    private Set<History> withdrawHistories = new HashSet<>(); // 양방향 매핑
+
+    @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY)
+    private Set<History> depositHistories = new HashSet<>(); // 양방향 매핑
 }
 
 
