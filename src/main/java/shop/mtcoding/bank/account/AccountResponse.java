@@ -9,6 +9,28 @@ import java.util.List;
 
 public class AccountResponse {
 
+    // 상세보기 화면에 입금,출금,전체 탭 부분
+    @Data
+    public static class HistoryDTO {
+        private String createdAt;
+        private String senderNumber;  // 보낸사람 계좌번호
+        private String receiverNumber; // 받은사람 계좌번호
+        private Integer amount; // 이체금액
+        private Integer balance; // 과거잔액 (보낸사람 잔액 or 받은사람 잔액)
+        private String gubun; // 입금, 출금
+
+        public HistoryDTO(History history, String myNumber) {
+            this.createdAt = history.getCreatedAt().toString();
+            this.senderNumber = history.getWithdrawAccount().getNumber();
+            this.receiverNumber = history.getDepositAccount().getNumber();
+            this.amount = history.getAmount();
+
+            this.balance = myNumber == senderNumber ? history.getWithdrawBalance() : history.getDepositBalance();
+            this.gubun = myNumber == senderNumber ? "출금" : "입금";
+        }
+    }
+
+    // 상세보기 전체 화면 데이터
     @Data
     public static class DetailDTOV3 {
         private String fullname; // 이름
@@ -24,7 +46,7 @@ public class AccountResponse {
         }
 
         @Data
-        class HistoryDTO {
+        protected class HistoryDTO {
             private String createdAt;
             private String senderNumber;  // 보낸사람 계좌번호
             private String receiverNumber; // 받은사람 계좌번호
@@ -32,7 +54,7 @@ public class AccountResponse {
             private Integer balance; // 과거잔액 (보낸사람 잔액 or 받은사람 잔액)
             private String gubun; // 입금, 출금
 
-            public HistoryDTO(History history) {
+            protected HistoryDTO(History history) {
                 this.createdAt = history.getCreatedAt().toString();
                 this.senderNumber = history.getWithdrawAccount().getNumber();
                 this.receiverNumber = history.getDepositAccount().getNumber();
@@ -66,7 +88,7 @@ public class AccountResponse {
         }
 
         @Data
-        class HistoryDTO {
+        protected class HistoryDTO {
             private String createdAt;
             private String senderNumber;  // 보낸사람 계좌번호
             private String receiverNumber; // 받은사람 계좌번호
@@ -74,7 +96,7 @@ public class AccountResponse {
             private Integer balance; // 과거잔액 (보낸사람 잔액 or 받은사람 잔액)
             private String gubun; // 입금, 출금
 
-            public HistoryDTO(History history) {
+            protected HistoryDTO(History history) {
                 this.createdAt = history.getCreatedAt().toString();
                 this.senderNumber = history.getWithdrawAccount().getNumber();
                 this.receiverNumber = history.getDepositAccount().getNumber();
@@ -105,7 +127,7 @@ public class AccountResponse {
         }
 
         @Data
-        class HistoryDTO {
+        protected class HistoryDTO {
             private String createdAt;
             private String senderNumber;  // 보낸사람 계좌번호
             private String receiverNumber; // 받은사람 계좌번호
@@ -113,7 +135,7 @@ public class AccountResponse {
             private Integer balance; // 과거잔액 (보낸사람 잔액 or 받은사람 잔액)
             private String gubun; // 입금, 출금
 
-            public HistoryDTO(History history) {
+            protected HistoryDTO(History history) {
                 this.createdAt = history.getCreatedAt().toString();
                 this.senderNumber = history.getWithdrawAccount().getNumber();
                 this.receiverNumber = history.getDepositAccount().getNumber();

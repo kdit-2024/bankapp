@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.bank.user.User;
+import shop.mtcoding.bank.util.ApiUtil;
 
 import java.util.List;
 
@@ -23,6 +24,20 @@ public class AccountController {
 //        AccountResponse.DetailDTO resDTO = accountService.계좌상세보기("1111", 1);
 //        return resDTO;
 //    }
+
+    // localhost:8080/account/1111/history?gubun=입금
+    @GetMapping("/account/{number}/history")
+    public @ResponseBody ApiUtil<?> history(@PathVariable("number") String number, @RequestParam(value = "gubun", defaultValue = "전체") String gubun){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null) throw new RuntimeException("인증되지 않은 사용자입니다.");
+
+        List<AccountResponse.HistoryDTO> resDTO = accountService.계좌히스토리(number, gubun); // 권한체크 필요
+
+        ApiUtil<?> apiUtil = new ApiUtil<>(200, "성공", resDTO);
+
+        return apiUtil;
+    }
+
 
     @GetMapping("/account/{number}") // uk or pk
     public String detail(@PathVariable("number") String number, HttpServletRequest request){
